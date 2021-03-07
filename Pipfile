@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pandas = "*"
+scikit-learn = "*"
+boto3 = "*"
+sagemaker = "*"
+matplotlib = "*"
+jupyter = "*"
+ipykernel = "*"
+lightgbm = "*"
+pandas-profiling = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
