@@ -3,10 +3,10 @@ from argparse import ArgumentParser
 from typing import Union
 
 import joblib
-
-from data import get_data
-from pipeline import get_pipeline
 from sklearn.metrics import f1_score
+
+from .data import get_data
+from .pipeline import get_pipeline
 
 
 def train_model(
