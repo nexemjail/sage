@@ -6,6 +6,7 @@ import joblib
 
 from data import get_data
 from pipeline import get_pipeline
+from sklearn.metrics import f1_score
 
 
 def train_model(
@@ -17,6 +18,14 @@ def train_model(
     train_df = get_data(data_path, "train")
     pipeline.fit(train_df.drop(columns=["Survived"]), train_df.Survived)
 
+    print(
+        "F1={}".format(
+            f1_score(
+                train_df.Survived,
+                pipeline.predict(train_df.drop(columns=["Survived"])),
+            )
+        )
+    )
     output_path = os.path.join(save_model_path, "model.joblib")
     joblib.dump(pipeline, output_path)
 
