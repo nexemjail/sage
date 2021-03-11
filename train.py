@@ -1,38 +1,20 @@
 import os
 from argparse import ArgumentParser
+from typing import Union
 
 import joblib
-import pandas as pd
-from lightgbm.sklearn import LGBMClassifier
-from sklearn.compose import ColumnTransformer
-from sklearn.impute import SimpleImputer
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder
+
+from data import get_data
+from pipeline import get_pipeline
 
 
-def train_model(data_path: str, save_model_path: str):
-    num_columns = ["Age", "Fare"]
-    median_imputer = SimpleImputer(strategy="median")
-    cat_columns = ["Sex", "Embarked", "Pclass"]
-    ohe = OneHotEncoder(handle_unknown="ignore")
-    ct = ColumnTransformer(
-        transformers=[
-            (
-                "num_columns",
-                median_imputer,
-                num_columns,
-            ),
-            ("cat_columns", ohe, cat_columns),
-        ]
-    )
-    pipeline = Pipeline(
-        steps=[
-            ("preprocess", ct),
-            ("model", LGBMClassifier(n_estimators=150, verbose=1)),
-        ]
-    )
+def train_model(
+    data_path: str, save_model_path: str, model_params: Union[None, dict]
+):
 
-    train_df = pd.read_csv(os.path.join(data_path, "train.csv"))
+    pipeline = get_pipeline(model_params)
+
+    train_df = get_data(data_path, "train")
     pipeline.fit(train_df.drop(columns=["Survived"]), train_df.Survived)
 
     output_path = os.path.join(save_model_path, "model.joblib")
