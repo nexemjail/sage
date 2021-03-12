@@ -5,12 +5,14 @@ from typing import Union
 import joblib
 from sklearn.metrics import f1_score
 
-from .data import get_data
-from .pipeline import get_pipeline
+from data import get_data
+from pipeline import get_pipeline
 
 
 def train_model(
-    data_path: str, save_model_path: str, model_params: Union[None, dict]
+    data_path: str,
+    save_model_path: str,
+    model_params: Union[None, dict] = None,
 ):
 
     pipeline = get_pipeline(model_params)
