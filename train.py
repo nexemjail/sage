@@ -1,5 +1,6 @@
+import json
+import logging
 import os
-from argparse import ArgumentParser
 from typing import Union
 
 import joblib
@@ -8,23 +9,33 @@ from sklearn.metrics import f1_score
 from data import get_data
 from pipeline import get_pipeline
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+    logger.addHandler(handler)
+
 
 def train_model(
-    data_path: str,
+    train_data_path: str,
+    validation_data_path: str,
     save_model_path: str,
     model_params: Union[None, dict] = None,
 ):
 
     pipeline = get_pipeline(model_params)
 
-    train_df = get_data(data_path, "train")
+    train_df = get_data(train_data_path, "train")
     pipeline.fit(train_df.drop(columns=["Survived"]), train_df.Survived)
 
-    print(
+    validation_df = get_data(validation_data_path, "validation")
+
+    logger.info(
         "F1={}".format(
             f1_score(
-                train_df.Survived,
-                pipeline.predict(train_df.drop(columns=["Survived"])),
+                validation_df.Survived,
+                pipeline.predict(validation_df.drop(columns=["Survived"])),
             )
         )
     )
@@ -33,19 +44,9 @@ def train_model(
 
 
 if __name__ == "__main__":
-    ap = ArgumentParser()
-    ap.add_argument(
-        "--train_data_dir",
-        type=str,
-        default=os.environ.get("SM_CHANNEL_TRAIN"),
+    train_model(
+        train_data_path=os.environ.get("SM_CHANNEL_TRAIN"),
+        validation_data_path=os.environ.get("SM_CHANNEL_VALIDATION"),
+        save_model_path=os.environ.get("SM_MODEL_DIR"),
+        model_params=json.loads(os.environ.get("SM_HPS")),
     )
-
-    ap.add_argument(
-        "--model_path",
-        type=str,
-        default=os.environ.get("SM_MODEL_DIR"),
-    )
-
-    args = ap.parse_args()
-
-    train_model(data_path=args.train_data_dir, save_model_path=args.model_path)
