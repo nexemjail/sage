@@ -1,7 +1,8 @@
-from data import get_data
-from pipeline import get_pipeline
-from sklearn.model_selection import cross_val_score
 import numpy as np
+from sklearn.model_selection import cross_val_score
+
+from lgbm_titanic.data import get_data, COLUMN_TARGET
+from pipeline import get_pipeline
 
 
 def cross_validate(data_path, model_params=None):
@@ -10,8 +11,8 @@ def cross_validate(data_path, model_params=None):
     train_df = get_data(data_path, "train")
     f1_metrics = cross_val_score(
         pipeline,
-        train_df.drop(columns=["Survived"]),
-        train_df["Survived"],
+        train_df.drop(columns=[COLUMN_TARGET]),
+        train_df[COLUMN_TARGET],
         cv=5,
         n_jobs=-1,
         scoring="f1",

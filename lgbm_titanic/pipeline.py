@@ -2,8 +2,8 @@ from typing import Union
 
 from sklearn.pipeline import Pipeline
 
-from model import get_model
-from preprocessing import get_column_transformer
+from lgbm_titanic.model import get_model
+from lgbm_titanic.preprocessing import get_column_transformer
 
 
 def get_pipeline(model_params: Union[None, dict] = None):

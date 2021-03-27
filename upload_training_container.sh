@@ -23,7 +23,7 @@ aws ecr get-login-password --region "${region}" | docker login --username AWS --
 # Build the docker image locally with the image name and then push it to ECR
 # with the full name.
 
-docker build -t ${algorithm_name} .
-docker tag ${algorithm_name} ${fullname}
+docker build -f serve.Dockerfile -t ${algorithm_name} .
+docker tag  ${algorithm_name} ${fullname}
 
 docker push ${fullname}

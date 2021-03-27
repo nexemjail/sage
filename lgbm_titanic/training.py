@@ -6,8 +6,8 @@ from typing import Union
 import joblib
 from sklearn.metrics import f1_score
 
-from data import get_data
-from pipeline import get_pipeline
+from lgbm_titanic.data import get_data
+from lgbm_titanic.pipeline import get_pipeline
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
