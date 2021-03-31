@@ -1,19 +1,21 @@
+from typing import Optional
+
 import pydantic
 
 
 # TODO: make it beautiful
 class RequestModel(pydantic.BaseModel):
-    PassengerId: int = None
-    Pclass: int = None
-    Name: str = None
-    Sex: str = None
-    Age: float = None
-    SibSp: int = None
-    Parch: int = None
-    Ticket: str = None
-    Fare: float = None
-    Cabin: str = None
-    Embarked: str = None
+    PassengerId: int
+    Pclass: int
+    Name: str
+    Sex: str
+    Age: float
+    SibSp: int
+    Parch: int
+    Ticket: str
+    Fare: float
+    Cabin: Optional[str]
+    Embarked: str
 
 
 class ResponseModel(pydantic.BaseModel):
