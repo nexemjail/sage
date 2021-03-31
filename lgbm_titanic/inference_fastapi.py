@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 
@@ -7,7 +6,8 @@ import pandas as pd
 from fastapi import Request, FastAPI
 from fastapi.responses import JSONResponse
 
-from lgbm_titanic.data import COLUMN_FEATURES, COLUMN_TARGET
+from lgbm_titanic.data import COLUMN_FEATURES
+from lgbm_titanic.validation import ResponseModel, RequestModel
 
 logger = logging.getLogger(__name__)
 
@@ -31,29 +31,12 @@ async def startup_event():
     )
 
 
-@app.post("/invocations")
-async def predict(request: Request):
-    try:
-        data_json = await request.json()
-    except json.JSONDecodeError as e:
-        logger.info(
-            "Got invalid json message with content",
-            extra={"message_data": await request.body()},
-        )
-        return JSONResponse({"message": "Invalid json"}, status_code=400)
-
-    # TODO: add validation via marshmallow or similar
-    for c in COLUMN_FEATURES:
-        if c not in data_json:
-            return JSONResponse(
-                {"message": f"{c} not present in data"}, status_code=400
-            )
-
-    df = pd.DataFrame(
-        {k: v for k, v in data_json.items() if k in COLUMN_FEATURES}, index=[0]
-    )
-    label = int(model.predict(df)[0])
-    return JSONResponse({"message": {COLUMN_TARGET: label}}, status_code=200)
+@app.post("/invocations", response_model=ResponseModel)
+async def predict(request: RequestModel):
+    df = pd.DataFrame(request.dict(), index=[0])
+    # ordering columns
+    label = int(model.predict(df[COLUMN_FEATURES])[0])
+    return {ResponseModel.Survived: label}
 
 
 @app.get("/ping")

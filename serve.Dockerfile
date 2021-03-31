@@ -4,7 +4,7 @@ LABEL com.amazonaws.sagemaker.capabilities.multi-models=true
 # Set a docker label to enable container to use SAGEMAKER_BIND_TO_PORT environment variable if present
 LABEL com.amazonaws.sagemaker.capabilities.accept-bind-to-port=true
 # TODO: make it install from requirements.txt
-RUN pip install scikit-learn pandas joblib lightgbm fastapi uvicorn python-json-logger
+RUN pip install scikit-learn pandas joblib lightgbm fastapi uvicorn python-json-logger pydantic
 EXPOSE 8080
 
 RUN mkdir -p /opt/ml/model
