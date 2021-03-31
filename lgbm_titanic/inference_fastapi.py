@@ -36,7 +36,7 @@ async def predict(request: RequestModel):
     df = pd.DataFrame(request.dict(), index=[0])
     # ordering columns
     label = int(model.predict(df[COLUMN_FEATURES])[0])
-    return {ResponseModel.Survived: label}
+    return ResponseModel(Survived=label)
 
 
 @app.get("/ping")
