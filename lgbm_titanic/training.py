@@ -6,7 +6,7 @@ from typing import Union
 import joblib
 from sklearn.metrics import f1_score
 
-from lgbm_titanic.data import get_data
+from lgbm_titanic.data import get_data, COLUMN_TARGET
 from lgbm_titanic.pipeline import get_pipeline
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ def train_model(
     pipeline = get_pipeline(model_params)
 
     train_df = get_data(train_data_path, "train")
-    pipeline.fit(train_df.drop(columns=["Survived"]), train_df.Survived)
+    pipeline.fit(train_df.drop(columns=[COLUMN_TARGET]), train_df.Survived)
 
     validation_df = get_data(validation_data_path, "validation")
 
@@ -35,7 +35,7 @@ def train_model(
         "F1={}".format(
             f1_score(
                 validation_df.Survived,
-                pipeline.predict(validation_df.drop(columns=["Survived"])),
+                pipeline.predict(validation_df.drop(columns=[COLUMN_TARGET])),
             )
         )
     )

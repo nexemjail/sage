@@ -17,18 +17,22 @@ model = None
 app = FastAPI()
 
 
-@app.on_event("startup")
-async def startup_event():
-    global model
+def load_model():
     logger.info(
         "Loading a model from folder",
         extra={"folder_name": str(os.listdir("/opt/ml/model/"))},
     )
-    model = joblib.load(
+    return joblib.load(
         os.path.join(
             os.environ.get("SM_MODEL_DIR", "/opt/ml/model/"), "model.joblib"
         )
     )
+
+
+@app.on_event("startup")
+async def startup_event():
+    global model
+    model = load_model()
 
 
 @app.post("/invocations", response_model=ResponseModel)

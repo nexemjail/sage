@@ -1,6 +1,7 @@
 FROM python:3.8
 # TODO: make it install from requirements.txt
-RUN pip install scikit-learn pandas joblib lightgbm fastapi uvicorn sagemaker-training
+COPY requirements-test.txt requirements.txt
+RUN pip install -r requirements.txt
 
 ENV APP_PATH=/opt/ml/code
 # Copies the training code inside the container
