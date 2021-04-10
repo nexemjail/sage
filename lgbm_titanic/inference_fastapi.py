@@ -5,6 +5,7 @@ import joblib
 import pandas as pd
 from fastapi import Request, FastAPI
 from fastapi.responses import JSONResponse
+from lightgbm.sklearn import LGBMClassifier
 
 from lgbm_titanic.data import COLUMN_FEATURES
 from lgbm_titanic.validation import ResponseModel, RequestModel
@@ -17,7 +18,7 @@ model = None
 app = FastAPI()
 
 
-def load_model():
+def load_model() -> LGBMClassifier:
     logger.info(
         "Loading a model from folder",
         extra={"folder_name": str(os.listdir("/opt/ml/model/"))},

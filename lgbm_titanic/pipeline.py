@@ -6,7 +6,7 @@ from lgbm_titanic.model import get_model
 from lgbm_titanic.preprocessing import get_column_transformer
 
 
-def get_pipeline(model_params: Union[None, dict] = None):
+def get_pipeline(model_params: Union[None, dict] = None) -> Pipeline:
     pipeline = Pipeline(
         steps=[
             ("preprocess", get_column_transformer()),

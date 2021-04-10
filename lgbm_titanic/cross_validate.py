@@ -5,7 +5,7 @@ from lgbm_titanic.data import get_data, COLUMN_TARGET
 from pipeline import get_pipeline
 
 
-def cross_validate(data_path, model_params=None):
+def cross_validate(data_path: str, model_params: dict = None):
     pipeline = get_pipeline(model_params=model_params)
 
     train_df = get_data(data_path, "train")
