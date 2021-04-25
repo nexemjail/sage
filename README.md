@@ -6,9 +6,12 @@ Do the `./upload_inference_container.sh` to build an image for inference and put
 Do test locally run `upload_inference_container.sh` and then do
 ```docker run -p 8080:8080 -v "$(pwd)"/model:/opt/ml/model:ro test-sagemaker-deploy-container:latest serve```
 where `model` is a folder with `model.joblib` file
-Or run a test like that:
+Or run a tests like that:
 ```
- docker run -v "$(pwd)"/model/:/opt/ml/model/:ro test
+docker build -f test.Dockerfile . -t test:latest
+docker run -v "$(pwd)"/model/:/opt/ml/model/:ro test:latest
 ```
+Enjoy coverage reporting!
+
 TODO:
 - Sample of model optimization

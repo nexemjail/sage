@@ -21,4 +21,5 @@ ENV PYTHONDONTWRITEBYTECODE=TRUE
 # Set up the program in the image
 COPY lgbm_titanic/ ${APP_PATH}/lgbm_titanic
 COPY tests ${APP_PATH}/tests
-ENTRYPOINT ["/bin/bash", "-c", "PYTHONPATH='.' pytest",  "-vvv"]
+COPY .coveragerc ${APP_PATH}/.coveragerc
+ENTRYPOINT [ "/bin/bash", "-c", "PYTHONPATH='.' pytest --cov=lgbm_titanic tests"]

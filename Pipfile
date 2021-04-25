@@ -21,6 +21,7 @@ sagemaker = "*"
 sagemaker-training = "*"
 pytest = "*"
 requests = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.8"
