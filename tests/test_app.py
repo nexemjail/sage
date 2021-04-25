@@ -29,7 +29,7 @@ def application() -> FastAPI:
     yield app
 
 
-def test_prediction(application, sample_data):
+def test_flow(application, sample_data):
     # to ensure before_request is called
     with TestClient(application) as test_client:
         prediction = test_client.post(
@@ -38,6 +38,17 @@ def test_prediction(application, sample_data):
         response_json = prediction.json()
         assert "Survived" in response_json
         assert response_json["Survived"] in {0, 1}
+
+
+def test_response_model(application, sample_data):
+    # to ensure before_request is called
+    with TestClient(application) as test_client:
+        prediction = test_client.post(
+            "/invocations", data=json.dumps(sample_data)
+        )
+        response_json = prediction.json()
+        assert "Survived" in response_json
+        assert isinstance(response_json["Survived"], int)
 
 
 # every possible missing field combination
@@ -52,7 +63,9 @@ def test_prediction(application, sample_data):
         )
     ),
 )
-def test_missing_field(application, sample_data, missing_fields: List[tuple]):
+def test_request_validation(
+    application, sample_data, missing_fields: List[tuple]
+):
     invalid_sample_data = sample_data.copy()
     for missing_field in missing_fields:
         del invalid_sample_data[missing_field]
